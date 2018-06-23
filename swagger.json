@@ -1,0 +1,166 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0"
+  },
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "Movies Resource"
+  } ],
+  "paths" : {
+    "/movies" : {
+      "post" : {
+        "tags" : [ "Movies Resource" ],
+        "operationId" : "loadMoviesData",
+        "parameters" : [ {
+          "name" : "data",
+          "in" : "formData",
+          "description" : "Uploaded file as inputstream ",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "in" : "body",
+          "name" : "fileName",
+          "description" : "Name of the file that is being uploaded",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/movies/filter" : {
+      "get" : {
+        "tags" : [ "Movies Resource" ],
+        "summary" : "Filter movies by Year, year range w/o genres",
+        "description" : "",
+        "operationId" : "getMovies",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "year",
+          "in" : "query",
+          "description" : "Year the movie was released",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "rangeStartYear",
+          "in" : "query",
+          "description" : "Start range for filter movie by year released",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "rangeEndYear",
+          "in" : "query",
+          "description" : "End range for filter movie by year released",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "genre",
+          "in" : "query",
+          "description" : "Genre of the movie to filter by",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sortBy",
+          "in" : "query",
+          "description" : "Field name to sort by",
+          "required" : false,
+          "type" : "string",
+          "default" : "rating"
+        }, {
+          "name" : "sortDirection",
+          "in" : "query",
+          "description" : "Sort Direction",
+          "required" : false,
+          "type" : "string",
+          "default" : "desc"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Top movies if present. Otherwise returns empty list.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/MoviesDto"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server side exception"
+          }
+        }
+      }
+    },
+    "/movies/popular" : {
+      "get" : {
+        "tags" : [ "Movies Resource" ],
+        "summary" : "Returns top 10 movies by rank by default. 'top' query param can be passed to request for more or less top movies",
+        "description" : "",
+        "operationId" : "findTopMoviesByRank",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "top",
+          "in" : "query",
+          "description" : "The total count of top movies to return",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Top movies if present. Otherwise returns empty list.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/MoviesDto"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server side exception"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "MoviesDto" : {
+      "type" : "object",
+      "properties" : {
+        "title" : {
+          "type" : "string"
+        },
+        "genres" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "year" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "rating" : {
+          "type" : "number",
+          "format" : "float"
+        },
+        "runtimeMinutes" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    }
+  }
+}
+
